@@ -55,17 +55,20 @@ def generate_products_medium(num_products=100000):
 
     return pd.DataFrame(data)
 
-def generate_sales_large(num_sales=3000000):
-    """셔플 조인용 - 큰 매출 테이블"""
+def generate_shipments_large(num_shipments=2000000):
     np.random.seed(789)
+    
+    statuses = ["shipped", "delivered", "in_transit", "cancelled"]
+    carriers = ["FedEx", "UPS", "DHL", "Korea Post"]
 
     data = {
-        'sale_id': range(1, num_sales + 1),
-        'product_id': np.random.randint(1, 100001, num_sales),
-        'store_id': np.random.randint(1, 1001, num_sales),
-        'sale_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_sales).date,
-        'quantity': np.random.randint(1, 6, num_sales),
-        'revenue': np.round(np.random.uniform(10.0, 2000.0, num_sales), 2)
+        'shipment_id': range(1, num_shipments + 1),
+        'order_id': np.random.randint(1, 20000001, num_shipments),  # orders_large의 order_id 범위
+        'ship_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_shipments).date,
+        'delivery_date': pd.date_range(start='2023-01-02', end='2025-01-01', periods=num_shipments).date,
+        'carrier': np.random.choice(carriers, num_shipments),
+        'status': np.random.choice(statuses, num_shipments),
+        'shipping_cost': np.round(np.random.uniform(5.0, 50.0, num_shipments), 2)
     }
 
     return pd.DataFrame(data)
@@ -123,9 +126,9 @@ def save_data(base_path: str):
     print(f"✓ orders_large.parquet ({len(orders):,}건, {os.path.getsize(f'{base_path}/orders_large.parquet')/1024/1024:.1f}MB)")
 
     # 셔플 조인용
-    sales = generate_sales_large(5000000)
-    sales.to_parquet(f"{base_path}/sales_large.parquet", index=False)
-    print(f"✓ sales_large.parquet ({len(sales):,}건, {os.path.getsize(f'{base_path}/sales_large.parquet')/1024/1024:.1f}MB)")
+    shipments = generate_shipments_large(10000000)
+    shipments.to_parquet(f"{base_path}/shipments_large.parquet", index=False)
+    print(f"✓ shipments_large.parquet ({len(shipments):,}건, {os.path.getsize(f'{base_path}/shipments_large.parquet')/1024/1024:.1f}MB)")
 
     orders_skewed = generate_orders_skewed(10000000)
     orders_skewed.to_parquet(f"{base_path}/orders_skewed.parquet", index=False)
@@ -133,7 +136,7 @@ def save_data(base_path: str):
 
     print("\n테스트 시나리오:")
     print("🔹 브로드캐스트 조인: customers_small ⋈ orders_large")
-    print("🔹 셔플 조인: products_medium ⋈ sales_large")
+    print("🔹 셔플 조인: shipments_large ⋈ sales_large")
     print("🔹 스큐 조인 문제: customers_small ⋈ orders_skewed (20%고객이 80%주문)")
 
 if __name__ == "__main__":
