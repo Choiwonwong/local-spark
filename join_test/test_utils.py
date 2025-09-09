@@ -105,7 +105,7 @@ def create_spark_session(app_name: str, aqe_enable: bool = True) -> SparkSession
     if aqe_enable:
         builder = builder \
             .config("spark.sql.adaptive.enabled", "true") \
-            .config("spark.sql.adaptive.coalescePartitions.enabled", "true")
+            .config("spark.sql.adaptive.coalescePartitions.enabled", "true") \
 
     # builder.config("spark.sql.autoBroadcastJoinThreshold", "-1") # 브로드캐스트 비활성화
     return builder.getOrCreate()

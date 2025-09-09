@@ -63,7 +63,7 @@ def generate_shipments_large(num_shipments=2000000):
 
     data = {
         'shipment_id': range(1, num_shipments + 1),
-        'order_id': np.random.randint(1, 20000001, num_shipments),  # orders_large의 order_id 범위
+        'order_id': np.random.randint(1, 10000001, num_shipments),  # orders_large의 order_id 범위 (500만)
         'ship_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_shipments).date,
         'delivery_date': pd.date_range(start='2023-01-02', end='2025-01-01', periods=num_shipments).date,
         'carrier': np.random.choice(carriers, num_shipments),
@@ -125,7 +125,6 @@ def save_data(base_path: str):
     orders.to_parquet(f"{base_path}/orders_large.parquet", index=False)
     print(f"✓ orders_large.parquet ({len(orders):,}건, {os.path.getsize(f'{base_path}/orders_large.parquet')/1024/1024:.1f}MB)")
 
-    # 셔플 조인용
     shipments = generate_shipments_large(10000000)
     shipments.to_parquet(f"{base_path}/shipments_large.parquet", index=False)
     print(f"✓ shipments_large.parquet ({len(shipments):,}건, {os.path.getsize(f'{base_path}/shipments_large.parquet')/1024/1024:.1f}MB)")
@@ -136,7 +135,7 @@ def save_data(base_path: str):
 
     print("\n테스트 시나리오:")
     print("🔹 브로드캐스트 조인: customers_small ⋈ orders_large")
-    print("🔹 셔플 조인: shipments_large ⋈ sales_large")
+    print("🔹 SortMerge 조인: shipments_large ⋈ sales_large")
     print("🔹 스큐 조인 문제: customers_small ⋈ orders_skewed (20%고객이 80%주문)")
 
 if __name__ == "__main__":
