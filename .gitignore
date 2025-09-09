@@ -111,3 +111,6 @@ derby.log
 # OS
 .DS_Store
 Thumbs.db
+
+
+join_test/samples/*

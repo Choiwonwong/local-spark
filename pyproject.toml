@@ -5,5 +5,9 @@ description = "Spark Test in Local"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "fastparquet>=2024.11.0",
+    "numpy>=2.2.6",
+    "pandas>=2.3.2",
+    "pyarrow>=21.0.0",
     "pyspark==3.5.6",
 ]
