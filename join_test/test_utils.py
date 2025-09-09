@@ -96,7 +96,7 @@ def create_spark_session(app_name: str, aqe_enable: bool = True) -> SparkSession
     builder = SparkSession.builder \
         .appName(app_name) \
         .master("local[2]") \
-        .config("spark.driver.memory", "4g")
+        .config("spark.driver.memory", "3g")
         # .config("spark.driver.cores", 2) \ # Can't set in standalone mode
         # .config("spark.executor.memory", "2g") \
         # .config("spark.executor.instances", 2) \
