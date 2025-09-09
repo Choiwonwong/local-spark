@@ -92,10 +92,10 @@ class TimeTracker:
         self.logger.info(f"  TOTAL: {total_time:.2f}s")
         self.logger.info("="*50)
 
-def create_spark_session(aqe_enable: bool = True) -> SparkSession:
+def create_spark_session(app_name: str, aqe_enable: bool = True) -> SparkSession:
     if aqe_enable:
         return SparkSession.builder \
-            .appName("Basic Join Test") \
+            .appName(app_name) \
             .config("spark.sql.adaptive.enabled", "true") \
             .config("spark.sql.adaptive.coalescePartitions.enabled", "true") \
             .getOrCreate()

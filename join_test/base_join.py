@@ -1,12 +1,14 @@
+import time
+
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, count, sum as spark_sum
+from pyspark.sql.functions import count, sum as spark_sum
 
 from join_test.test_utils import create_spark_session, TimeTracker
 
 
 def basic_inner_join():
     tracker = TimeTracker()
-    spark: SparkSession = create_spark_session(False)
+    spark: SparkSession = create_spark_session("Basic Join Test", False)
     
     try:
         # 데이터 읽기
@@ -16,7 +18,6 @@ def basic_inner_join():
         tracker.end_step()
         
         # 데이터 정보 확인
-        tracker.start_step("Data Info Check")
         print("=== Customers DataFrame Info ===")
         print(f"Count: {customers_df.count():,}")
         customers_df.show(5)
@@ -24,12 +25,12 @@ def basic_inner_join():
         print("=== Orders DataFrame Info ===")
         print(f"Count: {orders_df.count():,}")
         orders_df.show(5)
-        tracker.end_step()
         
         # Inner Join
         tracker.start_step("Inner Join")
         inner_result = customers_df.join(orders_df, "customer_id", "inner")
         print("=== Inner Join Result ===")
+        print(f"Count: {inner_result.count():,}")
         inner_result.show(10)
         tracker.end_step()
         
@@ -37,6 +38,7 @@ def basic_inner_join():
         tracker.start_step("Left Join")
         left_result = customers_df.join(orders_df, "customer_id", "left")
         print("=== Left Join Result ===")
+        print(f"Count: {left_result.count():,}")
         left_result.show(10)
         tracker.end_step()
         
@@ -52,6 +54,7 @@ def basic_inner_join():
         
     finally:
         tracker.log_summary()
+        time.sleep(6000)
         spark.stop()
 
 if __name__ == "__main__":
