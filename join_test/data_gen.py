@@ -3,7 +3,6 @@
 import pandas as pd
 import numpy as np
 import os
-from datetime import datetime, timedelta
 
 def generate_customers_small(num_customers=10000):
     """브로드캐스트 조인용 - 작은 고객 테이블"""
@@ -31,7 +30,7 @@ def generate_orders_large(num_orders=2000000):
     data = {
         'order_id': range(1, num_orders + 1),
         'customer_id': np.random.randint(1, 10001, num_orders),
-        'order_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_orders).date,
+        'order_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_orders),
         'category': np.random.choice(categories, num_orders),
         'quantity': np.random.randint(1, 11, num_orders),
         'amount': np.round(np.random.uniform(10.0, 1000.0, num_orders), 2)
@@ -64,7 +63,7 @@ def generate_sales_large(num_sales=3000000):
         'sale_id': range(1, num_sales + 1),
         'product_id': np.random.randint(1, 100001, num_sales),
         'store_id': np.random.randint(1, 1001, num_sales),
-        'sale_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_sales).date,
+        'sale_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_sales),
         'quantity': np.random.randint(1, 6, num_sales),
         'revenue': np.round(np.random.uniform(10.0, 2000.0, num_sales), 2)
     }
@@ -100,7 +99,7 @@ def generate_orders_skewed(num_orders=1500000):
     data = {
         'order_id': range(1, num_orders + 1),
         'customer_id': customer_ids,
-        'order_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_orders).date,
+        'order_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_orders),
         'category': np.random.choice(categories, num_orders),
         'quantity': np.random.randint(1, 11, num_orders),
         'amount': np.round(np.random.uniform(10.0, 1000.0, num_orders), 2)
@@ -123,11 +122,6 @@ def save_data(base_path: str):
     orders.to_parquet(f"{base_path}/orders_large.parquet", index=False)
     print(f"✓ orders_large.parquet ({len(orders):,}건, {os.path.getsize(f'{base_path}/orders_large.parquet')/1024/1024:.1f}MB)")
 
-    # 임계값 테스트용
-    products = generate_products_medium(100000)
-    products.to_parquet(f"{base_path}/products_medium.parquet", index=False)
-    print(f"✓ products_medium.parquet ({len(products):,}건, {os.path.getsize(f'{base_path}/products_medium.parquet')/1024/1024:.1f}MB)")
-
     # 셔플 조인용
     sales = generate_sales_large(30000000)
     sales.to_parquet(f"{base_path}/sales_large.parquet", index=False)
@@ -139,7 +133,6 @@ def save_data(base_path: str):
 
     print("\n테스트 시나리오:")
     print("🔹 브로드캐스트 조인: customers_small ⋈ orders_large")
-    print("🔹 임계값 테스트: products_medium ⋈ orders_large")
     print("🔹 셔플 조인: products_medium ⋈ sales_large")
     print("🔹 스큐 조인 문제: customers_small ⋈ orders_skewed (20%고객이 80%주문)")
 
