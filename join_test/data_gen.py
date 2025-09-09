@@ -79,13 +79,12 @@ def generate_orders_skewed(num_orders=1500000):
 
     # 파레토 법칙: 20%의 고객이 80%의 주문을 차지
     num_customers = 10000
-    hot_customers = int(num_customers * 0.2)  # 상위 20% 고객
-    hot_orders = int(num_orders * 0.8)        # 전체 주문의 80%
+    hot_customers = int(num_customers * 0.05)  # 상위 5% 고객
+    hot_orders = int(num_orders * 0.9)        # 전체 주문의 90%
 
     # 스큐된 customer_id 생성
     customer_ids = []
 
-    # 상위 20% 고객에게 80%의 주문 할당
     hot_customer_ids = np.random.choice(range(1, hot_customers + 1), hot_orders, replace=True)
     customer_ids.extend(hot_customer_ids)
 
@@ -129,14 +128,14 @@ def save_data(base_path: str):
     shipments.to_parquet(f"{base_path}/shipments_large.parquet", index=False)
     print(f"✓ shipments_large.parquet ({len(shipments):,}건, {os.path.getsize(f'{base_path}/shipments_large.parquet')/1024/1024:.1f}MB)")
 
-    orders_skewed = generate_orders_skewed(10000000)
+    orders_skewed = generate_orders_skewed(20000000)
     orders_skewed.to_parquet(f"{base_path}/orders_skewed.parquet", index=False)
     print(f"✓ orders_skewed.parquet ({len(orders_skewed):,}건, {os.path.getsize(f'{base_path}/orders_skewed.parquet')/1024/1024:.1f}MB)")
 
     print("\n테스트 시나리오:")
     print("🔹 브로드캐스트 조인: customers_small ⋈ orders_large")
     print("🔹 SortMerge 조인: shipments_large ⋈ sales_large")
-    print("🔹 스큐 조인 문제: customers_small ⋈ orders_skewed (20%고객이 80%주문)")
+    print("🔹 스큐 조인 문제: customers_small ⋈ orders_skewed (5%고객이 90%주문)")
 
 if __name__ == "__main__":
     base_path = 'samples'
