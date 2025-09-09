@@ -45,16 +45,13 @@ def broadcast_join_test_1():
         tracker.end_step()
 
         tracker.start_step("Aggregation with Left")
-        # Wrong Case - need driver memory 3gb
+        summary_with_left = broadcast(customers_df).join(orders_df, "customer_id", "left").groupBy("customer_name") \
+            .agg(count("order_id").alias("order_count"),
+                 spark_sum("amount").alias("total_amount"))
+        # Wrong Case - need more memory
         # summary_with_left = customers_df.join(broadcast(orders_df), "customer_id", "left").groupBy("customer_name") \
         #     .agg(count("order_id").alias("order_count"),
         #          spark_sum("amount").alias("total_amount"))
-
-        summary_with_left = orders_df.join(broadcast(customers_df), "customer_id", "left").groupBy("customer_name") \
-            .agg(count("order_id").alias("order_count"),
-                 spark_sum("amount").alias("total_amount"))
-
-
         print("=== Customer Summary with Left ===")
         summary_with_left.show(20)
         tracker.end_step()
