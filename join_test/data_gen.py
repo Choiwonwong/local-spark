@@ -123,11 +123,11 @@ def save_data(base_path: str):
     print(f"✓ orders_large.parquet ({len(orders):,}건, {os.path.getsize(f'{base_path}/orders_large.parquet')/1024/1024:.1f}MB)")
 
     # 셔플 조인용
-    sales = generate_sales_large(30000000)
+    sales = generate_sales_large(5000000)
     sales.to_parquet(f"{base_path}/sales_large.parquet", index=False)
     print(f"✓ sales_large.parquet ({len(sales):,}건, {os.path.getsize(f'{base_path}/sales_large.parquet')/1024/1024:.1f}MB)")
 
-    orders_skewed = generate_orders_skewed(20000000)
+    orders_skewed = generate_orders_skewed(10000000)
     orders_skewed.to_parquet(f"{base_path}/orders_skewed.parquet", index=False)
     print(f"✓ orders_skewed.parquet ({len(orders_skewed):,}건, {os.path.getsize(f'{base_path}/orders_skewed.parquet')/1024/1024:.1f}MB)")
 
