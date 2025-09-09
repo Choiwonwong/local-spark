@@ -30,7 +30,7 @@ def generate_orders_large(num_orders=2000000):
     data = {
         'order_id': range(1, num_orders + 1),
         'customer_id': np.random.randint(1, 10001, num_orders),
-        'order_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_orders),
+        'order_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_orders).date,
         'category': np.random.choice(categories, num_orders),
         'quantity': np.random.randint(1, 11, num_orders),
         'amount': np.round(np.random.uniform(10.0, 1000.0, num_orders), 2)
@@ -63,7 +63,7 @@ def generate_sales_large(num_sales=3000000):
         'sale_id': range(1, num_sales + 1),
         'product_id': np.random.randint(1, 100001, num_sales),
         'store_id': np.random.randint(1, 1001, num_sales),
-        'sale_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_sales),
+        'sale_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_sales).date,
         'quantity': np.random.randint(1, 6, num_sales),
         'revenue': np.round(np.random.uniform(10.0, 2000.0, num_sales), 2)
     }
@@ -99,7 +99,7 @@ def generate_orders_skewed(num_orders=1500000):
     data = {
         'order_id': range(1, num_orders + 1),
         'customer_id': customer_ids,
-        'order_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_orders),
+        'order_date': pd.date_range(start='2023-01-01', end='2024-12-31', periods=num_orders).date,
         'category': np.random.choice(categories, num_orders),
         'quantity': np.random.randint(1, 11, num_orders),
         'amount': np.round(np.random.uniform(10.0, 1000.0, num_orders), 2)
