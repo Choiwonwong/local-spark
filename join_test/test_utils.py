@@ -93,13 +93,17 @@ class TimeTracker:
         self.logger.info("="*50)
 
 def create_spark_session(app_name: str, aqe_enable: bool = True) -> SparkSession:
+    builder = SparkSession.builder \
+        .appName(app_name) \
+        .config("spark.driver.memory", "1g") \
+        .config("spark.driver.cores", "2") \
+        .config("spark.executor.memory", "1g") \
+        .config("spark.executor.instances", "2") \
+        .config("spark.executor.cores", "1")
+
     if aqe_enable:
-        return SparkSession.builder \
-            .appName(app_name) \
+        builder = builder \
             .config("spark.sql.adaptive.enabled", "true") \
-            .config("spark.sql.adaptive.coalescePartitions.enabled", "true") \
-            .getOrCreate()
-    else:
-        return SparkSession.builder \
-            .appName("Basic Join Test") \
-            .getOrCreate()
+            .config("spark.sql.adaptive.coalescePartitions.enabled", "true")
+    
+    return builder.getOrCreate()
